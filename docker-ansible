@@ -1,0 +1,12 @@
+docker run --privileged --cap-add CAP_SYS_ADMIN --network=host \
+  --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+  --mount type=bind,source=/dev/log,target=/dev/log \
+  --mount type=bind,source=/etc/hosts,target=/etc/hosts \
+  --mount type=bind,source=/usr/bin/docker,target=/usr/bin/docker \
+  --mount type=bind,source=$PWD,target=/weka \
+  --mount type=bind,source=/tmp,target=/tmp \
+  --mount type=bind,source=/opt,target=/opt \
+  --mount type=bind,source=/root,target=/root \
+  --mount type=bind,source=/etc/resolv.conf,target=/etc/resolv.conf \
+  --name ansible \
+  -it --rm wekasolutions/ansible:1.1 $*

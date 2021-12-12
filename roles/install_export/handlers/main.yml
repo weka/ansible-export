@@ -1,0 +1,16 @@
+---
+# handlers file for download_export
+#- name: reload systemctl
+#  systemd:
+#    state: restarted
+#    daemon_reload: yes
+#    name: "{{ repo }}"
+#  command: systemctl daemon-reload
+
+#- name: remove link
+#- name: create link
+#  become: yes
+#  file:
+#    src: "{{ dest_dir }}/{{ latest_version.json.tag_name }}"
+#    path: "{{ dest_dir }}/{{ repo }}"
+#    state: hard

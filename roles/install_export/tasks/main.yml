@@ -1,0 +1,113 @@
+---
+# tasks file for install_export
+
+- name: check {{ repo }} version
+  local_action:
+    module: uri
+    url: "{{ project_url }}/{{ version }}"
+    return_content: true
+  register: latest_version
+  run_once: True
+
+- name: check if {{ repo }}-{{ version }} already there
+  stat:
+    path: "{{ dest_dir }}/{{ latest_version.json.tag_name }}"
+  register: newestbinary
+
+- name: download and link to version {{ version }}
+  block:
+    - name: create tempfile
+      local_action:
+        module: tempfile
+        state: directory
+        suffix: dwnld
+      register: tempfolder_1
+      run_once: True
+
+    - name: "downloading {{ latest_version.json.tag_name }}"
+      loop: "{{ latest_version.json.assets }}"
+      when: "filename|string in item.name"
+      local_action:
+        module: get_url
+        url: "{{ item.browser_download_url }}"
+        dest: "{{ tempfolder_1.path }}"
+      register: tarball_file
+      run_once: True
+
+    #- name: "debug filename"
+    #  debug:
+    #    msg: "{{ tarball_file }}"
+
+    - name: "unpack archive {{ tarball_file.results[0].dest }}"
+      local_action:
+        module: unarchive
+        src: "{{ tarball_file.results[0].dest }}"
+        dest: "{{ tempfolder_1.path }}"
+        keep_newer: yes
+      run_once: True
+  
+    - name: "create {{ dest_dir }}"
+      become: True
+      file:
+        path: "{{ dest_dir }}/.weka"
+        state: directory
+        mode: 0755
+
+    - name: "copy {{ latest_version.json.tag_name }}"
+      become: True
+      copy:
+        src: "{{ tempfolder_1.path }}/{{ repo }}/{{ repo }}"
+        dest: "{{ dest_dir }}/{{ latest_version.json.tag_name }}"
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: "copy {{ auth_token_file }}"
+      become: True
+      copy:
+        src: "{{ auth_token_file }}"
+        dest: "{{ dest_dir }}/.weka/"
+        owner: root
+        group: root
+        mode: 0700
+
+    - name: "link {{ latest_version.json.tag_name }} -> {{ repo }} "
+      become: yes
+      file:
+        src: "{{ dest_dir }}/{{ latest_version.json.tag_name }}"
+        dest: "{{ dest_dir }}/{{ repo }}"
+        state: link
+        force: yes
+
+    - name: "generate {{ latest_version.json.tag_name }}.yml"
+      become: True
+      template:
+        src: "{{ tempfolder_1.path }}/{{ repo }}/{{ repo }}.yml.j2"
+        dest: "{{ dest_dir }}/{{ repo }}.yml"
+
+    - name: "install systemd unit"
+      become: True
+      template:
+        src: "{{ tempfolder_1.path }}/{{ repo }}/{{ repo }}.service.j2"
+        dest: "/etc/systemd/system/{{ repo }}.service"
+
+    - name: "start {{ repo }}"
+      become: True
+      systemd:
+        daemon_reload: yes
+        name: "{{ repo }}.service"
+        state: restarted
+        enabled: yes
+
+  when: not newestbinary.stat.exists
+
+  always:
+    - name: delete {{ tempfolder_1.path|default("tempfolder") }}
+      local_action:
+        module: file
+        path: "{{ tempfolder_1.path }}"
+        state: absent
+      when: tempfolder_1.path is defined
+      ignore_errors: true
+
+# vim:ft=yaml.ansible:

@@ -1,0 +1,10 @@
+---
+# main ansible config
+# note that the order the roles appear in below is the order of execution, regardless of ansible command line.
+- hosts: all
+  gather_facts: no
+#  gather_facts: yes
+  roles:
+    - { role: install_export, tags: ['install_export']}
+#  ignore_errors: yes
+

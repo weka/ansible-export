@@ -1,0 +1,67 @@
+# This file is program-generated (setup_ansible.py) - DO NOT MODIFY
+all:
+  hosts:
+    zweka02:
+      ansible_host: 172.29.0.135
+      dest_dir: "/opt/weka/export"
+      listen_port: 8001
+      loki_host:
+      loki_port: 3100
+      timeout: 10.0
+      max_procs: 8
+      max_threads_per_proc: 100
+      backends_only: True
+      auth_token_file: zweka02.auth-token.json
+      force_https: False
+      verify_cert: False
+      hosts:
+        - vweka01
+        - vweka02
+    zweka03:
+      ansible_host: 172.29.0.136
+      dest_dir: "/opt/weka/export"
+      listen_port: 8001
+      loki_host:
+      loki_port: 3100
+      timeout: 10.0
+      max_procs: 8
+      max_threads_per_proc: 100
+      backends_only: True
+      auth_token_file: zweka03.auth-token.json
+      force_https: False
+      verify_cert: False
+      hosts:
+        - vweka01
+        - vweka02
+    zweka04:
+      ansible_host: 172.29.0.137
+      dest_dir: "/opt/weka/export"
+      listen_port: 8001
+      loki_host:
+      loki_port: 3100
+      timeout: 10.0
+      max_procs: 8
+      max_threads_per_proc: 100
+      backends_only: True
+      auth_token_file: zweka04.auth-token.json
+      force_https: False
+      verify_cert: False
+      hosts:
+        - vweka01
+        - vweka02
+    zweka05:
+      ansible_host: 172.29.0.138
+      dest_dir: "/opt/weka/export"
+      listen_port: 8001
+      loki_host:
+      loki_port: 3100
+      timeout: 10.0
+      max_procs: 8
+      max_threads_per_proc: 100
+      backends_only: True
+      auth_token_file: zweka05.auth-token.json
+      force_https: False
+      verify_cert: False
+      hosts:
+        - vweka01
+        - vweka02
