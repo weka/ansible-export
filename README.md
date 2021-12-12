@@ -1,2 +1,4 @@
 # ansible-export
-Ansible scripts to install github.com/weka/export and such
+Ansible scripts to install github.com/weka/export
+
+Auto-updates to new versions.
