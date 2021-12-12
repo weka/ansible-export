@@ -25,7 +25,7 @@ See upper-level directories
 License
 -------
 
-BSD
+GPL
 
 Author Information
 ------------------
