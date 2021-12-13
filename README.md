@@ -10,6 +10,7 @@ git clone this repo (or download a release and unpack)
 - Edit inventory.yml to reflect your environment.  See http://github.com/weka/export for details
 - Edit group_vars/all to set user/password information as needed
 - Edit install_all.sh to select if running local or docker versions of ansible
+- Install auth-token.json files in roles/install_export/files/
 
 ## running
 execute the ./install_all.sh
