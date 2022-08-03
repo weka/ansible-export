@@ -1,0 +1,2 @@
+- name: ansible-export
+  src: https://github.com/weka/ansible-export
